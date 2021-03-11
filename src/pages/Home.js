@@ -155,6 +155,16 @@ function Home() {
                                   src="https://res.cloudinary.com/hgy47tmtk/image/upload/v1615369490/phone-call_yx26iy.svg"
                                 />
                               </Grid>
+                              <Grid item xs={6}>
+                                <h2
+                                  style={{
+                                    fontFamily: "Itim",
+                                    fontSize: "15px",
+                                  }}
+                                >
+                                  {user.Call}
+                                </h2>
+                              </Grid>
                             </Grid>
                           </Grid>
                         </Paper>
