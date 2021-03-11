@@ -3,11 +3,11 @@ import { makeStyles } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import {
   Box,
-  Button,
   Grid,
   Paper,
   Input,
   Avatar,
+  
   TextareaAutosize,
   Typography,
 } from "@material-ui/core";
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 function Create() {
   const classes = useStyles();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const history = useHistory();
   const [data, setData] = useState({
@@ -101,24 +101,29 @@ function Create() {
     });
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     console.log(data);
-    setLoading(true);
-    setTimeout(() => {
-      axios.post("https://friendsstory.herokuapp.com/api/v1/create", data).then(
+
+    await axios
+      .post("https://friendsstory.herokuapp.com/api/v1/create", data)
+      .then(
         (response) => {
           console.log(response.data);
-          setLoading(false);
-          setSuccess(true);
-          history.push("/");
+          setLoading(true);
+          setTimeout(() => {
+            if (response.data === "created") {
+              setSuccess(true);
+              history.push("/");
+            }
+          }, 1000);
         },
         (error) => {
           console.log(error);
         }
       );
-    }, 7000);
   }
+
   setTimeout(() => {
     setLoading(false);
   }, 2000);
@@ -170,186 +175,187 @@ function Create() {
                     }}
                   >
                     {" "}
-                    <Box display="flex" justifyContent="center">
-                      <Input
-                        style={{ display: "none" }}
-                        accept="image/*"
-                        id="icon-button-file"
-                        type="file"
-                        onChange={(e) => {
-                          uploadImage(e);
-                        }}
-                      />
-                      <label
-                        htmlFor="icon-button-file"
-                        style={{ marginTop: "60px" }}
-                      >
-                        <Box display="flex" justifyContent="center">
-                          <Avatar
-                            src={data.profileImage.img}
-                            style={{
-                              width: "100px",
-                              height: "100px",
-                            }}
-                          />
-                        </Box>
-                        <Box display="flex" justifyContent="center">
-                          <h1
-                            style={{
-                              fontFamily: "Itim",
-                              fontSize: "15px",
-                              color: "rgba(254,87,98,1)",
-                            }}
-                          >
-                            กดเพื่อเลือกรูปโปรโฟล์
-                          </h1>
-                        </Box>
-                      </label>
-                    </Box>
-                    <Box display="flex" justifyContent="center">
-                      <Typography>
-                        <h1 style={{ fontFamily: "Itim", fontSize: "25px" }}>
-                          จาก {data.name}
-                        </h1>
-                        <Input
-                          id="name"
-                          name="name"
-                          value={data["name"]}
-                          placeholder="ชื่อ :"
-                          style={{ fontFamily: "Itim", fontSize: "25px" }}
-                          onChange={(e) => {
-                            setData({ ...data, name: e.target.value });
-                          }}
-                        />
-                      </Typography>
-                    </Box>
-                    <Box>
+                    <form onSubmit={handleSubmit}>
                       <Box display="flex" justifyContent="center">
-                        <TextareaAutosize
-                          style={{
-                            marginTop: "25px",
-                            width: "320px",
-                            height: "100px",
-                            fontFamily: "Itim",
-                            borderRadius: "10px",
-                            fontSize: "15px",
-                            color: "rgba(254,87,98,1)",
-                          }}
-                          aria-label="minimum height"
-                          rowsMin={3}
-                          rowsMax={20}
-                          placeholder="เขียนให้หน่อยสิ"
+                        <Input
+                          style={{ display: "none" }}
+                          accept="image/*"
+                          id="icon-button-file"
+                          type="file"
                           onChange={(e) => {
-                            setData({ ...data, content: e.target.value });
+                            uploadImage(e);
                           }}
                         />
+                        <label
+                          htmlFor="icon-button-file"
+                          style={{ marginTop: "60px" }}
+                        >
+                          <Box display="flex" justifyContent="center">
+                            <Avatar
+                              src={data.profileImage.img}
+                              style={{
+                                width: "100px",
+                                height: "100px",
+                              }}
+                            />
+                          </Box>
+                          <Box display="flex" justifyContent="center">
+                            <h1
+                              style={{
+                                fontFamily: "Itim",
+                                fontSize: "15px",
+                                color: "rgba(254,87,98,1)",
+                              }}
+                            >
+                              กดเพื่อเลือกรูปโปรโฟล์
+                            </h1>
+                          </Box>
+                        </label>
                       </Box>
-                    </Box>
-                    <Box
-                      display="flex"
-                      justifyContent="center"
-                      style={{
-                        marginTop: "25px",
-                        fontFamily: "Itim",
-                      }}
-                    >
-                      <Grid container className={classes.root} spacing={1}>
-                        <Grid item xs={6}>
-                          <img
-                            alt=""
-                            style={{
-                              width: "30px",
-                              height: "30px",
-                            }}
-                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_%282019%29.png/1200px-Facebook_Logo_%282019%29.png"
-                          />
+                      <Box display="flex" justifyContent="center">
+                        <Typography>
+                          <h1 style={{ fontFamily: "Itim", fontSize: "25px" }}>
+                            จาก {data.name}
+                          </h1>
                           <Input
-                            placeholder="Facebook :"
+                            id="name"
+                            name="name"
+                            value={data["name"]}
+                            placeholder="ชื่อ :"
+                            style={{ fontFamily: "Itim", fontSize: "25px" }}
                             onChange={(e) => {
-                              setData({ ...data, FB: e.target.value });
+                              setData({ ...data, name: e.target.value });
                             }}
-                            style={{
-                              marginLeft: "5px",
-                              fontFamily: "Itim",
-                              fontSize: "15px",
-                              color: "rgba(7,20,199,1) ",
-                            }}
-                          ></Input>
-                        </Grid>
-                        <Grid item xs={6}>
-                          <img
-                            alt=""
-                            style={{
-                              width: "30px",
-                              height: "30px",
-                            }}
-                            src="https://www.manitawedding.com/wp-content/uploads/2018/05/instagram-logo-png-transparent-background-800x799.png"
                           />
-                          <Input
-                            placeholder="IG :"
-                            onChange={(e) => {
-                              setData({ ...data, IG: e.target.value });
-                            }}
+                        </Typography>
+                      </Box>
+                      <Box>
+                        <Box display="flex" justifyContent="center">
+                          <TextareaAutosize
                             style={{
-                              marginLeft: "5px",
+                              marginTop: "25px",
+                              width: "320px",
+                              height: "100px",
                               fontFamily: "Itim",
+                              borderRadius: "10px",
                               fontSize: "15px",
                               color: "rgba(254,87,98,1)",
                             }}
-                          ></Input>
-                        </Grid>
-                        <Grid item xs={6}>
-                          <img
-                            alt=""
-                            style={{
-                              width: "30px",
-                              height: "30px",
-                            }}
-                            src="https://res.cloudinary.com/hgy47tmtk/image/upload/v1615369490/phone-call_yx26iy.svg"
-                          />
-                          <Input
-                            value={data.Call}
+                            aria-label="minimum height"
+                            rowsMin={3}
+                            rowsMax={20}
+                            placeholder="เขียนให้หน่อยสิ"
                             onChange={(e) => {
-                              setData({ ...data, Call: e.target.value });
+                              setData({ ...data, content: e.target.value });
                             }}
-                            placeholder="Call :"
-                            type="number"
-                            style={{
-                              marginLeft: "5px",
-                              fontFamily: "Itim",
-                              fontSize: "15px",
-                              color: "rgba(20,100,20,1)",
-                            }}
-                          ></Input>
+                          />
+                        </Box>
+                      </Box>
+                      <Box
+                        display="flex"
+                        justifyContent="center"
+                        style={{
+                          marginTop: "25px",
+                          fontFamily: "Itim",
+                        }}
+                      >
+                        <Grid container className={classes.root} spacing={1}>
+                          <Grid item xs={6}>
+                            <img
+                              alt=""
+                              style={{
+                                width: "30px",
+                                height: "30px",
+                              }}
+                              src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_%282019%29.png/1200px-Facebook_Logo_%282019%29.png"
+                            />
+                            <Input
+                              placeholder="Facebook :"
+                              onChange={(e) => {
+                                setData({ ...data, FB: e.target.value });
+                              }}
+                              style={{
+                                marginLeft: "5px",
+                                fontFamily: "Itim",
+                                fontSize: "15px",
+                                color: "rgba(7,20,199,1) ",
+                              }}
+                            ></Input>
+                          </Grid>
+                          <Grid item xs={6}>
+                            <img
+                              alt=""
+                              style={{
+                                width: "30px",
+                                height: "30px",
+                              }}
+                              src="https://www.manitawedding.com/wp-content/uploads/2018/05/instagram-logo-png-transparent-background-800x799.png"
+                            />
+                            <Input
+                              placeholder="IG :"
+                              onChange={(e) => {
+                                setData({ ...data, IG: e.target.value });
+                              }}
+                              style={{
+                                marginLeft: "5px",
+                                fontFamily: "Itim",
+                                fontSize: "15px",
+                                color: "rgba(254,87,98,1)",
+                              }}
+                            ></Input>
+                          </Grid>
+                          <Grid item xs={6}>
+                            <img
+                              alt=""
+                              style={{
+                                width: "30px",
+                                height: "30px",
+                              }}
+                              src="https://res.cloudinary.com/hgy47tmtk/image/upload/v1615369490/phone-call_yx26iy.svg"
+                            />
+                            <Input
+                              value={data.Call}
+                              onChange={(e) => {
+                                setData({ ...data, Call: e.target.value });
+                              }}
+                              placeholder="Call :"
+                              type="number"
+                              style={{
+                                marginLeft: "5px",
+                                fontFamily: "Itim",
+                                fontSize: "15px",
+                                color: "rgba(20,100,20,1)",
+                              }}
+                            ></Input>
+                          </Grid>
                         </Grid>
-                      </Grid>
-                    </Box>
-                    <Button
-                      onClick={handleSubmit}
-                      style={{
-                        marginTop: "70px",
-                        color: "#ffff",
-                        borderRadius: "20px",
-                        fontFamily: "Itim",
-                        fontSize: "25px",
-                        width: "320px",
-                        backgroundImage:
-                          "linear-gradient( 109.6deg,  rgba(254,87,98,1) 11.2%, rgba(255,107,161,1) 99.1% )",
-                      }}
-                    >
-                      ส่ง
-                    </Button>
-                    <p
-                      style={{
-                        marginTop: "10px",
-                        color: "rgba(254,87,98,1)",
+                      </Box>
+                      <Input
+                        type="submit"
+                        label=" ส่ง"
+                        style={{
+                          marginTop: "70px",
+                          color: "#ffff",
+                          borderRadius: "20px",
+                          fontFamily: "Itim",
+                          fontSize: "25px",
+                          width: "320px",
+                          backgroundImage:
+                            "linear-gradient( 109.6deg,  rgba(254,87,98,1) 11.2%, rgba(255,107,161,1) 99.1% )",
+                        }}
+                      ></Input>
+                      <p
+                        style={{
+                          marginTop: "10px",
+                          color: "rgba(254,87,98,1)",
 
-                        fontFamily: "Itim",
-                        fontSize: "12px",
-                      }}
-                    >
-                      กดแล้วรอหน่อยนะ
-                    </p>
+                          fontFamily: "Itim",
+                          fontSize: "12px",
+                        }}
+                      >
+                        กดแล้วรอหน่อยนะ
+                      </p>
+                    </form>
                   </Paper>
                 </div>
               )}
