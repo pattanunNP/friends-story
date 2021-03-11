@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core";
+import { useHistory } from "react-router-dom";
 import {
   Box,
   Button,
   Grid,
   Paper,
-  IconButton,
   Input,
   Avatar,
   TextareaAutosize,
@@ -16,7 +16,6 @@ import FadeIn from "react-fade-in";
 import Lottie from "react-lottie";
 import * as loadingData from "../components/loading.json";
 import * as success from "../components/success.json";
-import DeleteRoundedIcon from "@material-ui/icons/DeleteRounded";
 
 const defaultOptions = {
   loop: true,
@@ -52,14 +51,14 @@ function Create() {
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
-  const [profiles, setProfiles] = React.useState([]);
+  const history = useHistory();
   const [data, setData] = useState({
     name: "",
     content: "",
     FB: "",
     IG: "",
     Call: "",
-    profileImage: [],
+    profileImage: {},
   });
 
   function generateUUID() {
@@ -83,42 +82,42 @@ function Create() {
       }
     );
   }
-
-  function onSetProfile(e) {
-    e.preventDefault();
-    let file_reader = new FileReader();
-    let profile = e.target.files[0];
-    file_reader.onload = () => {
-      setProfiles([
-        ...profiles,
-        { id: generateUUID(), img: file_reader.result },
-      ]);
-    };
-    if (profile) {
-      file_reader.readAsDataURL(profile);
-    }
+  async function uploadImage(e) {
+    const file = e.target.files[0];
+    const base64 = await onSetProfile(file);
+    //console.log(base64);
+    setData({ ...data, profileImage: { id: generateUUID(), img: base64 } });
+  }
+  function onSetProfile(file) {
+    return new Promise((resolve, reject) => {
+      let file_reader = new FileReader();
+      file_reader.readAsDataURL(file);
+      file_reader.onload = () => {
+        resolve(file_reader.result);
+      };
+      file_reader.onerror = (error) => {
+        reject(error);
+      };
+    });
   }
 
-  const handleDeleteProfile = (fileToDelete) => () => {
-    setProfiles((data) => data.filter((file) => file.id !== fileToDelete));
-  };
   function handleSubmit(e) {
-    setData({ ...data, profileImage: profiles });
+    e.preventDefault();
     console.log(data);
     setLoading(true);
-    axios.post("https://friendsstory.herokuapp.com/api/v1/create", data).then(
-      (response) => {
-        console.log(response.data);
-        setTimeout(() => {
+    setTimeout(() => {
+      axios.post("https://friendsstory.herokuapp.com/api/v1/create", data).then(
+        (response) => {
+          console.log(response.data);
           setLoading(false);
           setSuccess(true);
-          window.location = "/";
-        }, 7000);
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+          history.push("/");
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    }, 1000);
   }
   setTimeout(() => {
     setLoading(false);
@@ -177,60 +176,29 @@ function Create() {
                         accept="image/*"
                         id="icon-button-file"
                         type="file"
-                        onChange={onSetProfile}
-                        multiple="true"
+                        onChange={(e) => {
+                          uploadImage(e);
+                        }}
                       />
                       <label
                         htmlFor="icon-button-file"
                         style={{ marginTop: "60px" }}
                       >
                         <Box display="flex" justifyContent="center">
-                          {profiles.length === 0 ? (
-                            <div>
-                              {" "}
-                              <Avatar
-                                src=""
-                                style={{
-                                  width: "100px",
-                                  height: "100px",
-                                }}
-                              ></Avatar>
-                            </div>
-                          ) : (
-                            profiles.map((img) => (
-                              <div key={img.id}>
-                                {" "}
-                                <Avatar
-                                  src={img.img}
-                                  style={{
-                                    width: "100px",
-                                    height: "100px",
-                                  }}
-                                />
-                                <IconButton
-                                  onClick={
-                                    img.img.length === 0
-                                      ? undefined
-                                      : handleDeleteProfile(img.id)
-                                  }
-                                  style={{
-                                    width: "20%",
-                                    height: "20%",
-                                    color: "rgba(254,87,98,0.7)",
-                                  }}
-                                >
-                                  <DeleteRoundedIcon />
-                                </IconButton>
-                              </div>
-                            ))
-                          )}
+                          <Avatar
+                            src={data.profileImage.img}
+                            style={{
+                              width: "100px",
+                              height: "100px",
+                            }}
+                          />
                         </Box>
                         <Box display="flex" justifyContent="center">
                           <h1
                             style={{
                               fontFamily: "Itim",
                               fontSize: "15px",
-                              color: "rgba(254,87,98,0.3)",
+                              color: "rgba(254,87,98,1)",
                             }}
                           >
                             กดเพื่อเลือกรูปโปรโฟล์

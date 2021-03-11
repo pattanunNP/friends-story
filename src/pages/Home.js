@@ -32,18 +32,18 @@ function Home() {
 
   function fetch() {
     setLoading(true);
-    axios.post("https://friendsstory.herokuapp.com/api/v1/data").then(
-      (response) => {
-        setTimeout(() => {
+    setTimeout(() => {
+      axios.post("https://friendsstory.herokuapp.com/api/v1/data").then(
+        (response) => {
           const data = response.data.result;
           setInfo(data);
           setLoading(false);
-        }, 2000);
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    }, 2000);
   }
   useEffect(() => {
     fetch();
@@ -77,7 +77,9 @@ function Home() {
             <div>
               {info.length === 0 ? (
                 <div>
-                  <h1>ไม่มีข้อมูล</h1>
+                  <Box display="flex" justifyContent="center">
+                    <h1>ไม่มีข้อมูล</h1>
+                  </Box>
                 </div>
               ) : (
                 <div>
@@ -94,7 +96,13 @@ function Home() {
                             padding: "1rem",
                           }}
                         >
-                          <Avatar src={user.profileImage.img}></Avatar>
+                          <Avatar
+                            src={user.profileImage}
+                            style={{
+                              width: "80px",
+                              height: "80px",
+                            }}
+                          ></Avatar>
                           <Typography>
                             <h1
                               style={{ fontFamily: "Itim", fontSize: "15px" }}
@@ -115,16 +123,14 @@ function Home() {
                                 }}
                                 src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_%282019%29.png/1200px-Facebook_Logo_%282019%29.png"
                               />
-                              <Grid item xs={6}>
-                                <h2
-                                  style={{
-                                    fontFamily: "Itim",
-                                    fontSize: "15px",
-                                  }}
-                                >
-                                  {user.FB}
-                                </h2>
-                              </Grid>
+                              <h2
+                                style={{
+                                  fontFamily: "Itim",
+                                  fontSize: "15px",
+                                }}
+                              >
+                                {user.FB}
+                              </h2>
                             </Grid>
                             <Grid item xs={6}>
                               <img
@@ -135,36 +141,32 @@ function Home() {
                                 }}
                                 src="https://www.manitawedding.com/wp-content/uploads/2018/05/instagram-logo-png-transparent-background-800x799.png"
                               />
-                              <Grid item xs={6}>
-                                <h2
-                                  style={{
-                                    fontFamily: "Itim",
-                                    fontSize: "15px",
-                                  }}
-                                >
-                                  {user.IG}
-                                </h2>
-                              </Grid>
-                              <Grid item xs={6}>
-                                <img
-                                  alt=""
-                                  style={{
-                                    width: "30px",
-                                    height: "30px",
-                                  }}
-                                  src="https://res.cloudinary.com/hgy47tmtk/image/upload/v1615369490/phone-call_yx26iy.svg"
-                                />
-                              </Grid>
-                              <Grid item xs={6}>
-                                <h2
-                                  style={{
-                                    fontFamily: "Itim",
-                                    fontSize: "15px",
-                                  }}
-                                >
-                                  {user.Call}
-                                </h2>
-                              </Grid>
+                              <h2
+                                style={{
+                                  fontFamily: "Itim",
+                                  fontSize: "15px",
+                                }}
+                              >
+                                {user.IG}
+                              </h2>
+                            </Grid>
+                            <Grid item xs={6}>
+                              <img
+                                alt=""
+                                style={{
+                                  width: "30px",
+                                  height: "30px",
+                                }}
+                                src="https://res.cloudinary.com/hgy47tmtk/image/upload/v1615369490/phone-call_yx26iy.svg"
+                              />
+                              <h2
+                                style={{
+                                  fontFamily: "Itim",
+                                  fontSize: "15px",
+                                }}
+                              >
+                                {user.Call}
+                              </h2>
                             </Grid>
                           </Grid>
                         </Paper>
