@@ -97,7 +97,7 @@ function Home() {
                           }}
                         >
                           <Avatar
-                            src={user.profileImage}
+                            src={user.profileImage.img}
                             style={{
                               width: "80px",
                               height: "80px",
