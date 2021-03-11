@@ -105,12 +105,14 @@ function Create() {
   function handleSubmit(e) {
     setData({ ...data, profileImage: profiles });
     console.log(data);
+    setLoading(true);
     axios.post("https://friendsstory.herokuapp.com/api/v1/create", data).then(
       (response) => {
         console.log(response.data);
-        setTimeout(() => {
-          setSuccess(true);
-        }, 4000);
+        setLoading(false);
+
+        setSuccess(true);
+
         window.location = "/";
       },
       (error) => {
