@@ -111,7 +111,7 @@ function Create() {
         setTimeout(() => {
           setSuccess(true);
         }, 4000);
-        // window.location = "/";
+        window.location = "/";
       },
       (error) => {
         console.log(error);
