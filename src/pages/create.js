@@ -109,11 +109,11 @@ function Create() {
     axios.post("https://friendsstory.herokuapp.com/api/v1/create", data).then(
       (response) => {
         console.log(response.data);
-        setLoading(false);
-
-        setSuccess(true);
-
-        window.location = "/";
+        setTimeout(() => {
+          setLoading(false);
+          setSuccess(true);
+          window.location = "/";
+        }, 7000);
       },
       (error) => {
         console.log(error);
@@ -371,6 +371,17 @@ function Create() {
                     >
                       ส่ง
                     </Button>
+                    <p
+                      style={{
+                        marginTop: "10px",
+                        color: "rgba(254,87,98,1)",
+
+                        fontFamily: "Itim",
+                        fontSize: "12px",
+                      }}
+                    >
+                      กดแล้วรอหน่อยนะ
+                    </p>
                   </Paper>
                 </div>
               )}
