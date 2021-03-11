@@ -134,14 +134,15 @@ function Home() {
                               }}
                               src="https://www.manitawedding.com/wp-content/uploads/2018/05/instagram-logo-png-transparent-background-800x799.png"
                             />
-                            <h2
+                            <a
                               style={{
                                 fontFamily: "Itim",
                                 fontSize: "15px",
                               }}
+                              href={"https://www.instagram.com/" + user.IG}
                             >
-                              {user.IG}
-                            </h2>
+                              <br></br>@{user.IG}
+                            </a>
                           </Grid>
                           <Grid item xs={6}>
                             <img
@@ -152,14 +153,15 @@ function Home() {
                               }}
                               src="https://res.cloudinary.com/hgy47tmtk/image/upload/v1615369490/phone-call_yx26iy.svg"
                             />
-                            <h2
+                            <a
                               style={{
                                 fontFamily: "Itim",
                                 fontSize: "15px",
                               }}
+                              href={"tel:user.Call"}
                             >
                               {user.Call}
-                            </h2>
+                            </a>
                           </Grid>
                         </Grid>
                       </Paper>
