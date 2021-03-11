@@ -117,7 +117,7 @@ function Create() {
           console.log(error);
         }
       );
-    }, 1000);
+    }, 7000);
   }
   setTimeout(() => {
     setLoading(false);
