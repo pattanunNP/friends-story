@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     height: "auto",
-    width: "280px",
+    width: "320px",
   },
   control: {
     padding: theme.spacing(2),
